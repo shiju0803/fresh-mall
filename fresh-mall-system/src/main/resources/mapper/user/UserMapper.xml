@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzq.user.mapper.UserMapper">
+
+    <resultMap type="com.zzq.user.domain.User" id="WmUserResult">
+        <result property="uid" column="uid"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="realName" column="real_name"/>
+        <result property="birthday" column="birthday"/>
+        <result property="cardId" column="card_id"/>
+        <result property="mark" column="mark"/>
+        <result property="partnerId" column="partner_id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="avatar" column="avatar"/>
+        <result property="phone" column="phone"/>
+        <result property="addIp" column="add_ip"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="lastIp" column="last_ip"/>
+        <result property="nowMoney" column="now_money"/>
+        <result property="brokeragePrice" column="brokerage_price"/>
+        <result property="integral" column="integral"/>
+        <result property="signNum" column="sign_num"/>
+        <result property="status" column="status"/>
+        <result property="level" column="level"/>
+        <result property="spreadUid" column="spread_uid"/>
+        <result property="spreadTime" column="spread_time"/>
+        <result property="userType" column="user_type"/>
+        <result property="isPromoter" column="is_promoter"/>
+        <result property="payCount" column="pay_count"/>
+        <result property="spreadCount" column="spread_count"/>
+        <result property="addres" column="addres"/>
+        <result property="adminid" column="adminid"/>
+        <result property="loginType" column="login_type"/>
+        <result property="wxProfile" column="wx_profile"/>
+        <result property="isDel" column="is_del"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+    <select id="countTotalUser" resultType="java.lang.Integer">
+        SELECT
+            count(1)
+        FROM
+            kx_user
+        WHERE
+            create_time &lt;= #{date}
+    </select>
+    <select id="countNewUser" resultType="java.lang.Integer">
+        SELECT
+            count(1)
+        FROM
+            kx_user
+        WHERE
+            create_time between #{start} and #{end}
+    </select>
+
+    <select id="countOnlineUser" resultType="java.lang.Integer">
+        SELECT
+            count(1)
+        FROM
+            kx_user
+        WHERE
+            update_time between #{start} and #{end}
+    </select>
+
+    <select id="countOrderUser" resultType="java.lang.Integer">
+        SELECT count(DISTINCT(o.uid)) as num FROM `kx_store_order` o
+        where o.status in (20,30,40,50)
+          and
+            update_time between #{start} and #{end}
+    </select>
+
+    <select id="countFirstOrderUser" resultType="java.lang.Integer">
+        SELECT count(DISTINCT(o.uid)) as num FROM `kx_store_order` o
+                                                      left join kx_user u on o.uid = u.uid
+        where u.create_time between #{start} and #{start}
+          and o.create_time between #{start} and #{start}
+    </select>
+</mapper>
